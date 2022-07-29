@@ -1,8 +1,19 @@
 package main
 
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
 // ColumnLayout arranges Clients into columns.
 type ColumnLayout struct {
 	columns [][]*Client
+	setup map[string]string
+}
+
+func (l *ColumnLayout) Name() string {
+	return "Column"
 }
 
 // Arrange arranges all the windows of the workspace into the screen
@@ -51,6 +62,14 @@ func (l *ColumnLayout) AddClient(c *Client) {
 		if len(column) == 0 {
 			l.columns[i] = append(l.columns[i], c)
 			return
+		} else {
+			//rows exist, try to fill all the empty ones first
+			for row, value := range l.columns[i] {
+				if value == nil {
+					l.columns[i][row] = c
+					return
+				}
+			}
 		}
 	}
 	// Failing that, cram the client in the last column.
@@ -91,7 +110,7 @@ func (l *ColumnLayout) addColumn() {
 }
 
 // MoveClient moves the client left/right between columns, or up/down
-// within a single column.
+// change rows within a single column.
 func (l *ColumnLayout) MoveClient(c *Client, d Direction) {
 	switch d {
 	case Up:
@@ -144,4 +163,37 @@ func (l *ColumnLayout) MoveClient(c *Client, d Direction) {
 	default:
 		return
 	}
+}
+
+/**
+Generate a string such as: '3,4'
+for the case of 2 columns, with 3 and 4 rows
+*/
+func (l *ColumnLayout) GetArrangment() map[string]string {
+	details := ""
+	for idx, value := range l.columns {
+		details = fmt.Sprintf ("%s%s%d",
+			details,
+			iif(idx>0, ",", ""),
+			len(value))
+	}
+	if l.setup == nil {
+		l.setup = make (map[string]string)
+	}
+	l.setup[l.Name()] = details
+	return l.setup
+}
+
+func (l *ColumnLayout) SetArrangment(incoming_setup map[string]string) {
+	data := incoming_setup[l.Name()]
+	parts := strings.Split(data, ",")
+	for idx, raw_value := range parts {
+		value, _ := strconv.ParseInt(raw_value, 0, 64)
+		l.addColumn()
+		for n:=int64(0) ; n<value; n++ {
+			//fill array with blanks to be populated latter
+			l.columns[idx] = append(l.columns[idx], nil)
+		}
+	}
+	l.setup = incoming_setup
 }

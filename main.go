@@ -6,6 +6,22 @@ import (
 	"os"
 )
 
+/*
+WM - Window manager
+  screens- list
+	clients - list
+	workspaces - list
+		layout
+			clients - list
+
+Window Manager
+	workspaces
+		screen
+		layout
+				clients
+*/
+
+
 var (
 	errorQuit      = errors.New("Quit")
 	errorAnotherWM = errors.New("Another WM already running")

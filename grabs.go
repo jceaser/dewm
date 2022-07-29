@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"errors"
 	"os/exec"
 
@@ -25,7 +26,12 @@ func (wm *WM) getGrabs() []*Grab {
 		{
 			sym:       XK_Return,
 			modifiers: xproto.ModMask1,
-			callback:  spawner("x-terminal-emulator"),
+			callback: spawner("xterm"),
+		},
+		{
+			sym:       XK_Return,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback:  spawner("st"),
 		},
 		{
 			sym:       XK_q,
@@ -39,23 +45,23 @@ func (wm *WM) getGrabs() []*Grab {
 		},
 
 		{
-			sym:       XK_h,
+			sym:       XK_Left,
 			modifiers: xproto.ModMask1,
 			callback:  wm.moveClientOnActiveWorkspace(Left),
 		},
 		{
-			sym:       XK_l,
+			sym:       XK_Right,
 			modifiers: xproto.ModMask1,
 			callback:  wm.moveClientOnActiveWorkspace(Right),
 		},
 
 		{
-			sym:       XK_j,
+			sym:       XK_Down,
 			modifiers: xproto.ModMask1,
 			callback:  wm.moveClientOnActiveWorkspace(Down),
 		},
 		{
-			sym:       XK_k,
+			sym:       XK_Up,
 			modifiers: xproto.ModMask1,
 			callback:  wm.moveClientOnActiveWorkspace(Up),
 		},
@@ -71,6 +77,13 @@ func (wm *WM) getGrabs() []*Grab {
 			callback:  wm.addColumn,
 		},
 		{
+			sym:	   XK_f,
+			modifiers: xproto.ModMask1,
+			callback: func() error {
+				return wm.setLayoutOnActiveWorkspace(&FocusLayout{})
+			},
+		},
+		{
 			sym:       XK_m,
 			modifiers: xproto.ModMask1,
 			callback: func() error {
@@ -78,7 +91,7 @@ func (wm *WM) getGrabs() []*Grab {
 			},
 		},
 		{
-			sym:       XK_t,
+			sym:       XK_c,
 			modifiers: xproto.ModMask1,
 			callback: func() error {
 				return wm.setLayoutOnActiveWorkspace(&ColumnLayout{})
@@ -88,7 +101,10 @@ func (wm *WM) getGrabs() []*Grab {
 		{
 			sym:       XK_1,
 			modifiers: xproto.ModMask1,
-			callback:  func() error { return wm.SetActiveWorkspaceIdx(0) },
+			callback:  func() error {
+				fmt.Println("here with 1");
+				return wm.SetActiveWorkspaceIdx(0)
+			},
 		},
 		{
 			sym:       XK_2,
@@ -125,6 +141,17 @@ func (wm *WM) getGrabs() []*Grab {
 			modifiers: xproto.ModMask1,
 			callback:  func() error { return wm.SetActiveWorkspaceIdx(7) },
 		},
+		{
+			sym:       XK_9,
+			modifiers: xproto.ModMask1,
+			callback:  func() error { return wm.SetActiveWorkspaceIdx(8) },
+		},
+		{
+			sym:       XK_0,
+			modifiers: xproto.ModMask1,
+			callback:  func() error { return wm.SetActiveWorkspaceIdx(9) },
+		},
+
 	}
 }
 

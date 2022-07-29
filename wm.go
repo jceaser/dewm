@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/BurntSushi/xgb"
 	"github.com/BurntSushi/xgb/xinerama"
@@ -142,7 +143,7 @@ func (wm *WM) initWorkspaces() error {
 	wm.AddWorkspace(w)
 	for _, win := range tree.Children {
 		if wm.GetClient(win) != nil {
-			panic("window already managed by a client - what happened?")
+			fmt.Errorf("Window already managed by a client - what happened?")
 		}
 		c := NewClient(wm.xc, win)
 		err := c.Init()
@@ -180,16 +181,24 @@ func (wm *WM) AddWorkspace(w *Workspace) {
 func (wm *WM) GetActiveWorkspace() *Workspace {
 	w := wm.workspaces[wm.activeWs]
 	if wm.activeClient != nil && !w.HasClient(wm.activeClient) {
-		panic("marked active but don't have the active client")
+		fmt.Errorf("marked active but don't have the active client")
 	}
 	return w
 }
 
+func (wm *WM) valid_workspace(i int) bool {
+	if i<0 || i >= len(wm.workspaces) {
+		return false
+	}
+	return true
+}
+
 // SetActiveWorkspaceIdx switches to the given workspace (by index).
 func (wm *WM) SetActiveWorkspaceIdx(i int) error {
-	if i < 0 || i >= len(wm.workspaces) {
+	if wm.valid_workspace(wm.activeWs) {
 		return nil
 	}
+	fmt.Println("workspace %d -> %d", wm.activeWs, i)
 	if wm.activeWs == i {
 		return nil
 	}

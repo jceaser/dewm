@@ -5,13 +5,14 @@ import (
 	"log"
 
 	"github.com/BurntSushi/xgb/xinerama"
+	//"github.com/BurntSushi/xgb/xproto"
 )
 
 // Workspace represents a set of windows displayed at once, arranged
 // on a Screen using a Layout.
 type Workspace struct {
 	Screen *xinerama.ScreenInfo
-	Layout
+	Layout Layout
 }
 
 // AddClient registers the client in this Workspace (and its Layout).
@@ -32,6 +33,15 @@ func (w *Workspace) Arrange() error {
 		}
 	}
 	return nil
+}
+
+func (w *Workspace) RemoveClient(c *Client) bool {
+	result := false
+	if w.Layout != nil {
+		w.Layout.RemoveClient(c)
+		result = true
+	}
+	return result
 }
 
 // HasClient reports whether this workspace is managing that client.

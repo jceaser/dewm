@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-
+	"fmt"
 	"github.com/BurntSushi/xgb/xproto"
 )
 
@@ -13,6 +13,8 @@ func (wm *WM) handleEvent() error {
 	}
 	switch e := xev.(type) {
 	case xproto.KeyPressEvent:
+		fmt.Println ("here with a pressed event")
+		fmt.Println (e)
 		return wm.handleKeyPressEvent(e)
 	case xproto.KeyReleaseEvent:
 		return wm.handleKeyReleaseEvent(e)
@@ -101,7 +103,7 @@ func (wm *WM) handleMapRequestEvent(e xproto.MapRequestEvent) error {
 		w := wm.GetActiveWorkspace()
 		xproto.MapWindowChecked(wm.xc, e.Window)
 		if wm.GetClient(e.Window) != nil {
-			panic("window already managed by a client - what happened?")
+			fmt.Errorf("window already managed by a client - what happened?")
 		}
 		c := NewClient(wm.xc, e.Window)
 		err := c.Init()
@@ -122,7 +124,8 @@ func (wm *WM) handleMapRequestEvent(e xproto.MapRequestEvent) error {
 func (wm *WM) handleEnterNotifyEvent(e xproto.EnterNotifyEvent) error {
 	wm.activeClient = wm.GetClient(e.Event)
 	if wm.activeClient == nil {
-		panic("no workspace is managing this window - what happened?")
+		//gvim causes this error
+		fmt.Errorf("no workspace is managing this window - what happened?")
 	}
 	prop, err := xproto.GetProperty(wm.xc, false, e.Event, atomWMProtocols,
 		xproto.GetPropertyTypeAny, 0, 64).Reply()
@@ -170,7 +173,7 @@ func (wm *WM) handleMapNotifyEvent(e xproto.MapNotifyEvent) error {
 	// TODO: focus stealing prevention?
 	c := wm.GetClient(e.Window)
 	if c == nil {
-		panic("mapped a window that was not being managed!?")
+		fmt.Errorf("mapped a window that was not being managed!?")
 	}
 	wm.activeClient = c
 	return nil
@@ -179,7 +182,7 @@ func (wm *WM) handleMapNotifyEvent(e xproto.MapNotifyEvent) error {
 func (wm *WM) handleUnmapNotifyEvent(e xproto.UnmapNotifyEvent) error {
 	c := wm.GetClient(e.Window)
 	if c == nil {
-		panic("unmapped a window that was not being managed!?")
+		fmt.Errorf("unmapped a window that was not being managed!?")
 	}
 	if wm.activeClient == c {
 		// TODO: look for the active window?

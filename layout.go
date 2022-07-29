@@ -7,6 +7,9 @@ type Layout interface {
 	AddClient(*Client)
 	RemoveClient(*Client)
 	MoveClient(*Client, Direction)
+	GetArrangment() map[string]string
+	SetArrangment(map[string]string)
+	Name() string
 }
 
 // SetLayout changes the workspace to use the new Layout, preserving
@@ -14,11 +17,14 @@ type Layout interface {
 // layout, with clients removed.
 func (w *Workspace) SetLayout(l Layout) Layout {
 	old := w.Layout
+	l.SetArrangment(old.GetArrangment())
 	for _, c := range old.GetClients() {
 		l.AddClient(c)
 	}
 	// Let's take a shortcut :)
 	switch lt := old.(type) {
+	case *FocusLayout:
+		lt.clients = []*Client{}
 	case *MonocleLayout:
 		lt.clients = []*Client{}
 	case *ColumnLayout:
