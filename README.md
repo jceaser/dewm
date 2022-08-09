@@ -61,10 +61,47 @@ These keybindings are currently hardcoded, but may one day be configurable. Note
 * `Alt-Shift-Q` destroy the current window
 * `Ctrl-Alt-Shift-Q` quit dewm
 
+## Command Line Interface
+If your keybindings clash or you just can't remember and use them, the command line interface can be used to issue all the same actions. These can also be used to script control of the window manager. The window manager listens to a [Named Pipe](https://en.wikipedia.org/wiki/Named_pipe) for commands. Each command is on one line and if there are parameters it is separated by a `:`.
+
+The Named Pipe will be in the tmp drive and has an extintion matching the x-windows display number. 
+
+	echo left >> /tmp/dewm-commands.0
+
+You can also use the window manager binary to send messages by using the `--command` flag. Here is an example of sending a command to dewm running on display :1 (not the default) which will send commands to `/tmp/dewm-commands.1`
+
+	DISPLAY=:1 ; ./dewm --command 'tag:1'
+
+Acceptable commands are in the table below.
+
+| Command | Param  | Description
+| ------- | ------ | ------------
+|     add |        | Add a new column
+|   clean |        | Clean up columns
+|    quit |        | Try to quit nicely
+|    exit |        | Forcfully stop program
+|    term |        | Open a XTerm
+|    open | app    | Open \<app\>
+|   focus |        | Switch to the focus view
+| monical |        | Switch to the monical view
+|  column |        | Switch to th ecolumn view
+|     tag | number | Push the top app to screen \<number\>
+|    view | number | Switch to screen \<number\>
+|    left |        | Move apps left
+|    down |        | Move apps down
+|      up |        | Move apps up
+|   right |        | Move apps right
+
+
+
 ## Differences from fork
 
 * Updated to support modern (1.17) golang specs (go.mod…)
 * Added Focus layout
 * VIM arrow keys convented to actual arrow keys
-	* Sorry, I'm a dvorak keyboard user, vim arrows don't help
-* Multiple workspace (planned) 
+	* Sorry, I'm a dvorak keyboard user, vim arrows are cool but do not actually help me
+* Command Line Interface 
+* Multiple workspace (planned)
+	* may be working
+* Multi Monitor support (planned)
+	* Currently assumes one virtual monitor	

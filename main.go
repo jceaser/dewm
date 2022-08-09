@@ -77,10 +77,8 @@ func readCommands(msg chan string, wm *WM) {
 
 	reader := bufio.NewReader(file)
 	for {
-		//fmt.Println ("reading command and putting into buffer")
 		line, err := reader.ReadBytes('\n')
 		if err == nil {
-			//msg <- string(line)
 			var action func() error
 			action = nil
 			clean_line := strings.TrimSpace(string(line))
@@ -150,20 +148,22 @@ func print_manual() {
 
 func main() {
 	//flag setup
+	var command string
     manual := flag.Bool("manual", false, "print out a command list")
-    command := flag.String("command", "", "print out function manual")
+    flag.StringVar(&command, "command", "", "print out function manual")
+    flag.StringVar(&command, "c", "", "print out function manual")
 
 	flag.Parse()
 
 	if *manual {
 		print_manual()
-		return
+		os.Exit(0)
 	}
 
-	if 0<len(*command) {
+	if 0<len(command) {
 		pipeFile = DisplayFileName()
-		AppendFile(pipeFile, *command)
-		return
+		AppendFile(pipeFile, command)
+		os.Exit(0)
 	}
 
 	messages := make(chan string, 255)
@@ -192,8 +192,5 @@ func main() {
 		default:
 			log.Print(err)
 		}
-		//fmt.Println ("about to get message")
-		//fmt.Println (<-messages)
-		//readCommands(file)
 	}
 }
