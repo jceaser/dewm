@@ -18,6 +18,13 @@ dropped, more added, arbitrary changes made.
 [dwm]: https://dwm.suckless.org/
 [wmii]: https://code.google.com/archive/p/wmii/
 
+## Goals
+Based off of the dewm, this fork seeks to:
+
+1. Be runnable on the mac via XQuartz
+2. Provide multiple monitor support (pending) 
+3. Provide multiple screens per monitor
+
 ## Basics
 
 `dewm` is a very simple window manager that seeks to arranges winows on a screen automaticly freeing the user from the need to keep track of or position windows. Most users probobly never has experienced a window manager like this being use to needing to move and size windows manually. In fact, the current state of computing has resulted in most users having so many windows open on the screen that windows actually get lost.
@@ -53,3 +60,11 @@ These keybindings are currently hardcoded, but may one day be configurable. Note
 * `Alt-Q` close the current window
 * `Alt-Shift-Q` destroy the current window
 * `Ctrl-Alt-Shift-Q` quit dewm
+
+## Differences from fork
+
+* Updated to support modern (1.17) golang specs (go.mod…)
+* Added Focus layout
+* VIM arrow keys convented to actual arrow keys
+	* Sorry, I'm a dvorak keyboard user, vim arrows don't help
+* Multiple workspace (planned) 

@@ -13,8 +13,6 @@ func (wm *WM) handleEvent() error {
 	}
 	switch e := xev.(type) {
 	case xproto.KeyPressEvent:
-		fmt.Println ("here with a pressed event")
-		fmt.Println (e)
 		return wm.handleKeyPressEvent(e)
 	case xproto.KeyReleaseEvent:
 		return wm.handleKeyReleaseEvent(e)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"errors"
 	"os/exec"
 
@@ -97,19 +97,65 @@ func (wm *WM) getGrabs() []*Grab {
 				return wm.setLayoutOnActiveWorkspace(&ColumnLayout{})
 			},
 		},
-
+		{
+			sym:		XK_1,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(0)},
+		},
+		{
+			sym:		XK_2,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(1)},
+		},
+		{
+			sym:		XK_3,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(2)},
+		},
+		{
+			sym:		XK_4,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(3)},
+		},
+		{
+			sym:		XK_5,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(4)},
+		},
+		{
+			sym:		XK_6,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(5)},
+		},
+		{
+			sym:		XK_7,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(6)},
+		},
+		{
+			sym:		XK_8,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(7)},
+		},
+		{
+			sym:		XK_9,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(8)},
+		},
+		{
+			sym:		XK_0,
+			modifiers: xproto.ModMask1 | xproto.ModMaskShift,
+			callback: func() error {return wm.MoveActiveClientToWorkspace(9)},
+		},
 		{
 			sym:       XK_1,
 			modifiers: xproto.ModMask1,
-			callback:  func() error {
-				fmt.Println("here with 1");
-				return wm.SetActiveWorkspaceIdx(0)
-			},
+			callback:  func() error {return wm.SetActiveWorkspaceIdx(0)},
 		},
 		{
 			sym:       XK_2,
 			modifiers: xproto.ModMask1,
-			callback:  func() error { return wm.SetActiveWorkspaceIdx(1) },
+			callback:  func() error {return wm.SetActiveWorkspaceIdx(1) },
 		},
 		{
 			sym:       XK_3,

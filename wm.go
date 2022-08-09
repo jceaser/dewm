@@ -188,26 +188,53 @@ func (wm *WM) GetActiveWorkspace() *Workspace {
 
 func (wm *WM) valid_workspace(i int) bool {
 	if i<0 || i >= len(wm.workspaces) {
+		fmt.Printf("only %d workspaces.\n", len(wm.workspaces))
 		return false
 	}
 	return true
 }
 
+func (wm *WM) MoveActiveClientToWorkspace(i int) error {
+	var ret error = nil
+	source := wm.GetActiveWorkspace()
+	dest := wm.workspaces[i]
+	if source.RemoveClient(wm.activeClient) {
+		dest.AddClient(wm.activeClient)
+		ret = wm.SetActiveWorkspaceIdx(i)
+		source.Arrange()
+		dest.Arrange()
+		fmt.Println("done arranging")
+	} else {
+		ret = errors.New("Could not parse SetupInfo.")
+	}
+	fmt.Print ("error: ")
+	fmt.Println (ret)
+	return ret
+}
+
 // SetActiveWorkspaceIdx switches to the given workspace (by index).
 func (wm *WM) SetActiveWorkspaceIdx(i int) error {
-	if wm.valid_workspace(wm.activeWs) {
+	fmt.Printf ("Setting active workspace from %d to %d.\n", wm.activeWs, i)
+	if !wm.valid_workspace(i) {
+		fmt.Println ("Not a valid workspace")
 		return nil
 	}
-	fmt.Println("workspace %d -> %d", wm.activeWs, i)
+	fmt.Printf("workspace %d -> %d.\n", wm.activeWs, i)
 	if wm.activeWs == i {
+		fmt.Println ("already on %d", i)
 		return nil
 	}
 	if err := wm.workspaces[wm.activeWs].Hide(); err != nil {
+		fmt.Println ("Hide failed:", err)
 		return err
 	}
+	//wm.workspaces[wm.activeWs].Arrange()
 	wm.activeWs = i
 	if err := wm.workspaces[wm.activeWs].Show(); err != nil {
+		fmt.Println ("Show failed:", err)
 		return err
 	}
+	wm.workspaces[wm.activeWs].Arrange()
+
 	return nil
 }
